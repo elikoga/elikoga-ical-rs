@@ -47,7 +47,7 @@ impl ICalObject {
             }
             // check if it's a begin property
             if line.name == "BEGIN" {
-                sub_objects.push(ICalObject::from_iterator(&mut peekable)?);
+                sub_objects.push(ICalObject::from_peekable(&mut peekable)?);
             } else {
                 // get line
                 let line = peekable.next().unwrap()?;
