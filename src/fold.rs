@@ -20,7 +20,7 @@ pub fn fold_with_max_length(line: &str, max_length: usize) -> String {
             // add the current character
             new_line_buf.push(c);
             // update the current line length
-            current_line_length = 0 + ' '.len_utf8() + c.len_utf8();
+            current_line_length = ' '.len_utf8() + c.len_utf8();
         } else {
             new_line_buf.push(c);
             current_line_length += c.len_utf8();
@@ -53,8 +53,8 @@ mod tests {
     fn unfold_fold_unfold_is_without_issue() {
         // go through all ./private-test-icals/*.ics files and go through all lines
         let folder = std::path::Path::new("./private-test-icals");
-        let mut files = std::fs::read_dir(folder).unwrap();
-        while let Some(file) = files.next() {
+        let files = std::fs::read_dir(folder).unwrap();
+        for file in files {
             let file = file.unwrap();
             let path = file.path();
             let filename = path.file_name().unwrap().to_str().unwrap();

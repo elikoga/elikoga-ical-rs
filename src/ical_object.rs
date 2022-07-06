@@ -17,15 +17,15 @@ pub struct ICalObject {
 
 impl ICalObject {
     fn from_peekable(
-        mut peekable: &mut Peekable<impl Iterator<Item = Result<ContentLine>>>,
+        peekable: &mut Peekable<impl Iterator<Item = Result<ContentLine>>>,
     ) -> Result<Self> {
         let mut properties = Vec::new();
         let mut sub_objects = Vec::new();
         let line = peekable.next().ok_or(eyre!("no line found"))??;
-        if line.name != "BEGIN" {
+        if !line.name.eq_ignore_ascii_case("BEGIN") {
             return Err(eyre!("expected BEGIN"));
         }
-        let object_type = line.value.clone();
+        let object_type = line.value;
         while let Some(line) = match peekable.peek() {
             Some(Ok(line)) => Some(line),
             Some(Err(_)) => {
@@ -36,7 +36,7 @@ impl ICalObject {
             }
             None => None,
         } {
-            if line.name == "END" {
+            if line.name.eq_ignore_ascii_case("END") {
                 // get the next line
                 let line = peekable.next().unwrap()?;
                 // check that the object type matches
@@ -46,8 +46,8 @@ impl ICalObject {
                 break;
             }
             // check if it's a begin property
-            if line.name == "BEGIN" {
-                sub_objects.push(ICalObject::from_peekable(&mut peekable)?);
+            if line.name.eq_ignore_ascii_case("BEGIN") {
+                sub_objects.push(ICalObject::from_peekable(peekable)?);
             } else {
                 // get line
                 let line = peekable.next().unwrap()?;
@@ -106,8 +106,8 @@ mod tests {
     fn it_works_on_all_private_test_icals() {
         // go through all ./private-test-icals/*.ics files
         let folder = std::path::Path::new("./private-test-icals");
-        let mut files = std::fs::read_dir(folder).unwrap();
-        while let Some(file) = files.next() {
+        let files = std::fs::read_dir(folder).unwrap();
+        for file in files {
             let file = file.unwrap();
             let path = file.path();
             let filename = path.file_name().unwrap().to_str().unwrap();

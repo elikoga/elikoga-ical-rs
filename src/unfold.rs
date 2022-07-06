@@ -136,8 +136,8 @@ mod tests {
     fn it_works_on_all_private_test_icals() {
         // go through all ./private-test-icals/*.ics files and go through all lines
         let folder = std::path::Path::new("./private-test-icals");
-        let mut files = std::fs::read_dir(folder).unwrap();
-        while let Some(file) = files.next() {
+        let files = std::fs::read_dir(folder).unwrap();
+        for file in files {
             let file = file.unwrap();
             let path = file.path();
             let filename = path.file_name().unwrap().to_str().unwrap();

@@ -54,7 +54,7 @@ fn build_qsafe(value: &[u8]) -> Result<String> {
     // just assert thatt it consists of QSAFE-CHAR
     // so any character except control characters and '"'
     for c in value {
-        if (c.is_ascii_control() && !(*c == b'\t')) || *c == b'"' {
+        if (c.is_ascii_control() && *c != b'\t') || *c == b'"' {
             return Err(eyre!(
                 "invalid qsafe: {}",
                 std::str::from_utf8(value).unwrap()
@@ -68,7 +68,7 @@ fn build_safe(value: &[u8]) -> Result<String> {
     // just assert thatt it consists of SAFE-CHAR
     // so any character except control characters and '"', ';', ':' and ','
     for c in value {
-        if (c.is_ascii_control() && !(*c == b'\t'))
+        if (c.is_ascii_control() && *c != b'\t')
             || *c == b'"'
             || *c == b';'
             || *c == b':'
@@ -87,7 +87,7 @@ fn build_value(value: &[u8]) -> Result<String> {
     // just assert thatt it consists of VALUE-CHAR
     // so any character except control characters
     for c in value {
-        if c.is_ascii_control() && !(*c == b'\t') {
+        if c.is_ascii_control() && *c != b'\t' {
             return Err(eyre!(
                 "invalid value: {}",
                 std::str::from_utf8(value).unwrap()
@@ -179,8 +179,8 @@ mod tests {
     fn it_works_on_all_private_test_icals() {
         // go through all ./private-test-icals/*.ics files and go through all lines
         let folder = std::path::Path::new("./private-test-icals");
-        let mut files = std::fs::read_dir(folder).unwrap();
-        while let Some(file) = files.next() {
+        let files = std::fs::read_dir(folder).unwrap();
+        for file in files {
             let file = file.unwrap();
             let path = file.path();
             let filename = path.file_name().unwrap().to_str().unwrap();
