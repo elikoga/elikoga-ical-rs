@@ -86,14 +86,14 @@ impl ICalObject {
 
 impl Display for ICalObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "BEGIN:{}\r\n", self.object_type)?;
+        write!(f, "{}\r\n", &fold(&format!("BEGIN:{}", self.object_type)))?;
         for line in &self.properties {
             write!(f, "{}\r\n", fold(&line.to_string()))?;
         }
         for object in &self.sub_objects {
             write!(f, "{}", object)?;
         }
-        write!(f, "END:{}\r\n", self.object_type)
+        write!(f, "{}\r\n", &fold(&format!("END:{}", self.object_type)))
     }
 }
 
