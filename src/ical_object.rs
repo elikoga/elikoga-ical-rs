@@ -8,7 +8,7 @@ use std::{
 use crate::{content_line::ContentLine, fold::fold, unfold::Unfold};
 use eyre::{eyre, Result};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ICalObject {
     pub object_type: String,
     pub properties: Vec<ContentLine>,
