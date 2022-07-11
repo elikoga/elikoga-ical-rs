@@ -12,10 +12,26 @@ pub struct ContentLine {
     pub value: String, // special strings actually, see `value = *VALUE-CHAR` from the RFC
 }
 
+impl ContentLine {
+    pub fn new(name: String, params: Vec<Param>, value: String) -> Self {
+        Self {
+            name,
+            params,
+            value,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Param {
     name: String,
     values: Vec<String>, // assert that there is at least one value
+}
+
+impl Param {
+    pub fn new(name: String, values: Vec<String>) -> Self {
+        Self { name, values }
+    }
 }
 
 impl Display for ContentLine {
