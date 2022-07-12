@@ -55,7 +55,7 @@ jobs:
       
       - name: generate a test ical
         run: |
-          cargo --release --example generate_random > private-test-icals/generated.ical
+          cargo run --release --example generate_random > private-test-icals/generated.ical
 
       - name: Run Tests
         run: cargo test --all --locked
