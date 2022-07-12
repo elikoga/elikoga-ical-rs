@@ -1,9 +1,16 @@
 [package]
 name = "elikoga-ical-rs"
-version = "0.2.2"
+version = "0.2.3"
+authors = ["Eli Kogan-Wang <elikowa@gmail.com>"]
 edition = "2021"
 description = "Ical library"
+documentation = "https://docs.rs/elikoga-ical-rs"
+homepage = "https://github.com/elikoga/elikoga-ical-rs/"
+repository = "https://github.com/elikoga/elikoga-ical-rs/"
 license = "MIT"
+keywords = ["ical", "icalendar", "ics", "rfc5545"]
+categories = ["encoding", "parser-implementations", "parsing", "text-processing"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
