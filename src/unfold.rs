@@ -45,7 +45,7 @@ where
                 match self
                     .read
                     .read_until(b'\r', &mut buf)
-                    .wrap_err("first read_until failed")
+                    .wrap_err("first read_until \\r failed")
                 {
                     // read until CR
                     Ok(0) => return None, // EOF
@@ -58,6 +58,16 @@ where
                 assert!(buf[0] != b' '); // it's not a space
                 assert!(buf[0] != b'\t'); // it's not a tab
 
+                // check that the last byte is a CR
+                if buf[buf.len() - 1] != b'\r' {
+                    self.last_line = Some(buf); // main loop deals with this issue too
+                    return Some(Err(eyre!(
+                        r"last byte of first read_until \r is not a CR
+this means that the parser encounted a first line,
+that is not properly terminated by a CR (followed by a newline),
+this may mean, that the file does not have the proper line endings"
+                    )));
+                }
                 // assumption: the next character is a newline
                 // assert that
                 let mut newline_buf: [u8; 1] = [0; 1];
@@ -90,6 +100,18 @@ where
                 Ok(_) => (),
                 Err(e) => return Some(Err(e)),
             };
+            // check that the last byte is a CR
+            if next_line_buf[next_line_buf.len() - 1] != b'\r' {
+                self.last_line = Some(next_line_buf);
+                return Some(Err(eyre!(
+                    r"last byte of read_until \\r is not a CR
+this means that the parser encounted a line, other than the first line,
+that is not properly terminated by a CR (followed by a newline)
+this may mean, that the file does not have the proper line endings
+or it means, that a trailing CRLF is missing"
+                )));
+            }
+
             // assumption: the next character is a newline
             // assert that
             let mut newline_buf: [u8; 1] = [0; 1];
@@ -107,7 +129,10 @@ where
             next_line_buf.pop();
             // if the next line is empty, we can fail with an error, since empty lines are not allowed
             if next_line_buf.is_empty() {
-                return Some(Err(eyre!("empty line")));
+                return Some(Err(eyre!(
+                    r"empty line
+the ical spec does not allow empty lines"
+                )));
             }
             // if the line does not begin with whitespace, we are done
             if next_line_buf[0] != b' ' && next_line_buf[0] != b'\t' {
