@@ -16,7 +16,7 @@ pub struct ICalObject {
 }
 
 impl ICalObject {
-    fn from_peekable(
+    pub fn from_peekable(
         peekable: &mut Peekable<impl Iterator<Item = Result<ContentLine>>>,
     ) -> Result<Self> {
         let mut properties = Vec::new();
@@ -61,7 +61,7 @@ impl ICalObject {
         })
     }
 
-    fn from_iterator(iterator: &mut impl Iterator<Item = Result<ContentLine>>) -> Result<Self> {
+    pub fn from_iterator(iterator: &mut impl Iterator<Item = Result<ContentLine>>) -> Result<Self> {
         let mut peekable = iterator.peekable();
         Self::from_peekable(&mut peekable)
     }
@@ -77,7 +77,7 @@ impl FromStr for ICalObject {
 }
 
 impl ICalObject {
-    fn from_bufread(read: &mut impl BufRead) -> Result<Self> {
+    pub fn from_bufread(read: &mut impl BufRead) -> Result<Self> {
         let mut unfolded =
             Unfold::new(read).flat_map(|line| line.map(|line| line.parse::<ContentLine>()));
         ICalObject::from_iterator(&mut unfolded)
