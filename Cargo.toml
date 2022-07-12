@@ -21,5 +21,5 @@ thiserror = "1"
 [dev-dependencies]
 rand = "0.8.5"
 
-[[example]]
-name = "generate_random"
+[package.metadata.release]
+pre-release-hook = ["./pre-release.sh"]
