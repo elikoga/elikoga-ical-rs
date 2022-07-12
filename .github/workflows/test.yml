@@ -45,8 +45,17 @@ jobs:
             ~/.cargo/bin
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
+            private-test-icals
             target
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: populate private-test-icals
+        run: |
+          ./populate-test-icals.sh
+      
+      - name: generate a test ical
+        run: |
+          cargo --release --example generate_random > private-test-icals/generated.ical
 
       - name: Run Tests
         run: cargo test --all --locked
