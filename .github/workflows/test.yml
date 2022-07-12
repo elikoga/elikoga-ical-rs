@@ -45,9 +45,6 @@ jobs:
             target
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
 
-      - name: create folder private-test-icals
-
-
       - name: populate private-test-icals
         run: |
           ./populate-test-icals.sh
