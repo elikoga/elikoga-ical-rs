@@ -1,6 +1,6 @@
 [package]
 name = "elikoga-ical-rs"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Eli Kogan-Wang <elikowa@gmail.com>"]
 edition = "2021"
 description = "Ical library"
